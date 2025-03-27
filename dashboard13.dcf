@@ -1,0 +1,12 @@
+name: dashboard13
+title: dashboard13
+username: lfeith
+account: lfeith
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 14353951
+bundleId: 10011875
+url: https://lfeith.shinyapps.io/dashboard13/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE
