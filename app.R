@@ -5,7 +5,7 @@
 # Find out more about building applications with Shiny here:
 #
 #    https://shiny.posit.co/
-# Hello this is group 13
+#
 
 library(shiny)
 
