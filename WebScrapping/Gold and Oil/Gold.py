@@ -13,6 +13,8 @@ df.index = df.index.tz_localize(None)
 if df.empty:
     print(" Aucune donnée trouvée.")
 else:
+
+    df['Close'] = df['Close'].apply(lambda x: int(x))  # Convertir les valeurs en entier
     # Enregistrement dans un fichier Excel
     csv_filename = "gold_prices.csv"
     df.to_csv(csv_filename, index=True, sep=";")

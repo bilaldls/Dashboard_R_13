@@ -13,6 +13,8 @@ df.index = df.index.tz_localize(None)  # Supprimer la timezone pour éviter les 
 if df.empty:
     print("Aucune donnée trouvée.")
 else:
+
+    df['Close'] = df['Close'].apply(lambda x: int(x))  # Convertir les valeurs en entier
     # Enregistrement dans un fichier CSV
     csv_filename = "oil_prices.csv"
     df.to_csv(csv_filename, index=True, sep=";")
