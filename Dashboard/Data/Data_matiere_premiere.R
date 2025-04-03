@@ -1,0 +1,2 @@
+# file.copy("C:\\Users\\arthu\\OneDrive\\Documents\\2IA\\Données\\Visualisation\\Dashboard_R_13\\WebScrapping\\Gold and Oil\\gold_prices.csv", "C:\\Users\\arthu\\OneDrive\\Documents\\2IA\\Données\\Visualisation\\Dashboard_R_13\\Dashboard\\Data")
+# file.copy("C:\\Users\\arthu\\OneDrive\\Documents\\2IA\\Données\\Visualisation\\Dashboard_R_13\\WebScrapping\\Gold and Oil\\oil_prices.csv", "C:\\Users\\arthu\\OneDrive\\Documents\\2IA\\Données\\Visualisation\\Dashboard_R_13\\Dashboard\\Data")
