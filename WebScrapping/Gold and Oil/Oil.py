@@ -15,7 +15,7 @@ if df.empty:
 else:
     # Enregistrement dans un fichier CSV
     csv_filename = "oil_prices.csv"
-    df.to_csv(csv_filename, index=True)
+    df.to_csv(csv_filename, index=True, sep=";")
     print(f"Données enregistrées dans {csv_filename}")
 
     # Tracer le graphique des prix du pétrole
