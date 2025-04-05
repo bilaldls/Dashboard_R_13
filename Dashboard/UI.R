@@ -1,4 +1,3 @@
-# ui.R
 library(shiny)
 
 # Définir l'interface utilisateur
@@ -12,7 +11,10 @@ ui <- fluidPage(
     ),
     
     mainPanel(
-      plotOutput("plotPrix")
+      plotOutput("plotPrix"),        # Graphique des prix
+      plotOutput("plotVolatilite")   # Graphique de la volatilité annuelle
     )
   )
 )
+
+
