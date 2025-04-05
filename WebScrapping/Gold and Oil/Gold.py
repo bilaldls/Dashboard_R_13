@@ -1,19 +1,28 @@
 import yfinance as yf
 import matplotlib.pyplot as plt
-
+import numpy as np
 
 # Définition du ticker de l’or sur Yahoo Finance
 ticker = "GC=F"
 
 # Récupération des données historiques
 gold_data = yf.Ticker(ticker)
-df = gold_data.history(period="1000d")  # Récupérer les données sur 1000 jours
+df = gold_data.history(period="10950d")  # Récupérer les données sur 10950 jours
 df.index = df.index.tz_localize(None)
 # Vérifier si les données existent
 if df.empty:
     print(" Aucune donnée trouvée.")
 else:
+    df['Daily Return'] = df['Close'].pct_change()
 
+    # Calcul de l'écart-type des rendements journaliers
+    daily_std = df['Daily Return'].std()
+
+    # Calcul de la volatilité annuelle
+    annual_volatility = daily_std * np.sqrt(252)
+
+    # Ajouter la volatilité annuelle dans une nouvelle colonne si tu veux la voir dans le tableau (répétée pour chaque ligne)
+    df['Annual Volatility'] = annual_volatility
     df['Close'] = df['Close'].apply(lambda x: int(x))  # Convertir les valeurs en entier
     # Enregistrement dans un fichier Excel
     csv_filename = "gold_prices.csv"
