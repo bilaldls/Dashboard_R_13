@@ -15,10 +15,15 @@ ui <- navbarPage("Dashboard des Prix des Matières Premières",
                           )
                  ),
                  
-                 # Onglet 2 : Taux de la FED
-                 tabPanel("Taux de la FED",
-                          mainPanel(
-                            plotOutput("plotFedRate")       # Nouveau graphique à afficher
+                 tabPanel("Taux banques centrales",
+                          sidebarLayout(
+                            sidebarPanel(
+                              selectInput("taux_choisi", "Choisir la banque centrale :", 
+                                          choices = c("FED", "BCE"), selected = "FED")
+                            ),
+                            mainPanel(
+                              plotOutput("plotFedRate")  # <- C'est ça qui manquait
+                            )
                           )
                  )
 )

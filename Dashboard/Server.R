@@ -7,12 +7,12 @@ library(dplyr)
 # Charger les données
 gold_data <- read_csv2("data/gold_prices.csv")
 oil_data <- read_csv2("data/oil_prices.csv")
-fed_data <- read_csv2("data/fed_funds_rate.csv")  # Assure-toi que ce fichier existe et est bien formaté
-
+fed_data <- read_csv2("data/fed_funds_rate.csv")
+bce_data <- read.csv2("data/taux_refinancement_bce.csv")
 
 # Convertir en numérique si nécessaire
 fed_data$`FED Funds Rate` <- as.numeric(gsub(",", ".", fed_data$`FED Funds Rate`))
-
+bce_data$Taux <- as.numeric(gsub(",", ".", bce_data$Taux))
 
 # Conversion explicite de la colonne Annual Volatility en numérique
 gold_data$`Annual Volatility` <- as.numeric(gsub(",", ".", gold_data$`Annual Volatility`))
@@ -28,6 +28,19 @@ server <- function(input, output) {
       gold_data
     } else {
       oil_data
+    }
+  })
+  
+  # Fonction réactive pour le choix des taux : FED ou BCE
+  taux_reactif <- reactive({
+    if (input$taux_choisi == "FED") {
+      fed_data %>%
+        mutate(Taux = `FED Funds Rate`, Banque = "FED") %>%
+        select(Date, Taux, Banque)
+    } else {
+      bce_data %>%
+        mutate(Banque = "BCE") %>%
+        select(Date, Taux, Banque)
     }
   })
   
@@ -52,19 +65,19 @@ server <- function(input, output) {
       labs(title = paste("Volatilité annuelle du", input$choix),
            x = "Année", y = "Volatilité Annuelle") +
       theme_minimal() +
-      theme(axis.text.x = element_text(angle = 45, hjust = 1))  # Améliore lisibilité des années
+      theme(axis.text.x = element_text(angle = 45, hjust = 1))
   })
   
-  # Créer le graphique des taux de la FED avec des points et une ligne
+  # Créer le graphique des taux (FED ou BCE) dynamiquement
   output$plotFedRate <- renderPlot({
-    ggplot(fed_data, aes(x = as.Date(Date), y = `FED Funds Rate`)) +
-      geom_line(color = "gray70") +  # Ligne fine entre les points
-      geom_point(color = "darkgreen", size = 2) +  # Points verts
-      scale_y_continuous(breaks = seq(0, ceiling(max(fed_data$`FED Funds Rate`, na.rm = TRUE)), by = 1)) +  # Graduations de 1 en 1
-      labs(title = "Taux directeur de la FED (Federal Funds Rate)",
+    data <- taux_reactif()
+    
+    ggplot(data, aes(x = as.Date(Date), y = Taux)) +
+      geom_line(color = "gray70") +
+      geom_point(color = "darkgreen", size = 2) +
+      scale_y_continuous(breaks = seq(0, ceiling(max(data$Taux, na.rm = TRUE)), by = 1)) +
+      labs(title = paste("Taux directeur -", unique(data$Banque)),
            x = "Date", y = "Taux (%)") +
       theme_minimal()
   })
-  
-  
 }
