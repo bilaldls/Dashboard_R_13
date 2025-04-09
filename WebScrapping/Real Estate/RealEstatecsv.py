@@ -30,6 +30,9 @@ tables = camelot.read_pdf("HistoriquedesprixaumappartementsanciensParispararrdt.
 dfs = [table.df for table in tables]
 data = pd.concat(dfs, ignore_index=True)
 
+print(dfs[0].head())
+
+
 # Prépare la liste qui contiendra le trimestre et sa moyenne de prix
 resultats = []
 
