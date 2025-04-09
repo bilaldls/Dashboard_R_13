@@ -1,0 +1,12 @@
+name: DashboardTestV1Bilal
+title: DashboardTestV1Bilal
+username: bilaldls
+account: bilaldls
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 14447628
+bundleId: 10069335
+url: https://bilaldls.shinyapps.io/DashboardTestV1Bilal/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE
