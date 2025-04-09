@@ -6,7 +6,7 @@ import re
 paris_df = pd.read_csv("moyenne_prix_par_trimestre.csv", delimiter=";", encoding="utf-8")
 
 #Lecture du CSV de NY
-ny_df = pd.read_csv("NY_moyenne_prix.csv")
+ny_df = pd.read_csv("NY_moyenne_prix.csv", delimiter=";")
 
 # On fusionne les données sur la colonne "Trimestre".
 # La jointure "outer" permet de conserver tous les trimestres présents dans l’un ou l’autre fichier.
