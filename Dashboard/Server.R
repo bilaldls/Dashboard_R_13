@@ -3,6 +3,8 @@ library(shiny)
 library(ggplot2)
 library(readr)
 library(dplyr)
+library(GGally)
+
 
 # Charger les données
 gold_data <- read_csv2("data/gold_prices.csv")
@@ -17,7 +19,6 @@ bce_data$Taux <- as.numeric(gsub(",", ".", bce_data$Taux))
 # Conversion explicite de la colonne Annual Volatility en numérique
 gold_data$`Annual Volatility` <- as.numeric(gsub(",", ".", gold_data$`Annual Volatility`))
 oil_data$`Annual Volatility` <- as.numeric(gsub(",", ".", oil_data$`Annual Volatility`))
-
 
 # Définir la logique du serveur
 server <- function(input, output) {
@@ -80,4 +81,51 @@ server <- function(input, output) {
            x = "Date", y = "Taux (%)") +
       theme_minimal()
   })
+  
+  output$plotScatterCorrelation <- renderPlot({
+    df_joint <- merge(donnees_reactives(), taux_reactif(), by = "Date") %>%
+      dplyr::select(Close, `Annual Volatility`, Taux) %>%
+      rename(Prix = Close, Volatilite = `Annual Volatility`) %>%
+      na.omit()
+    
+    ggplot(df_joint, aes(x = Taux, y = Prix)) +
+      geom_point(alpha = 0.5, color = "steelblue") +
+      geom_smooth(method = "lm", formula = y ~ poly(x, 2), se = TRUE, color = "darkred") +
+      labs(title = paste("Corrélation non linéaire (polynomiale) Prix vs Taux -", input$choix),
+           x = "Taux directeur", y = "Prix") +
+      theme_minimal()
+  })
+  
+  output$plotBoxVolatilite <- renderPlot({
+    df_joint <- merge(donnees_reactives(), taux_reactif(), by = "Date") %>%
+      dplyr::select(Close, `Annual Volatility`, Taux) %>%
+      rename(Prix = Close, Volatilite = `Annual Volatility`) %>%
+      na.omit()
+    
+    df_joint %>%
+      mutate(Taux_catégorie = cut(Taux, breaks = c(-Inf, 1, 2, Inf), 
+                                  labels = c("<1%", "1-2%", ">2%"))) %>%
+      ggplot(aes(x = Taux_catégorie, y = Volatilite)) +
+      geom_boxplot(fill = "lightblue") +
+      labs(title = paste("Volatilité par tranche de taux FED -", input$choix),
+           x = "Tranche de Taux", y = "Volatilité") +
+      theme_minimal()
+  })
+  
+  output$plotCrossCorrelation <- renderPlot({
+    df_joint <- merge(donnees_reactives(), taux_reactif(), by = "Date") %>%
+      dplyr::select(Date, `Annual Volatility`, Taux) %>%
+      rename(Volatilite = `Annual Volatility`) %>%
+      na.omit()
+    
+    # Série temporelle
+    volatilite_ts <- ts(df_joint$Volatilite)
+    taux_ts <- ts(df_joint$Taux)
+    
+    # Corrélation croisée
+    ccf(taux_ts, volatilite_ts, lag.max = 20, main = "Cross-Corrélation : Taux vs Volatilité",
+        ylab = "Corrélation", xlab = "Décalage (jours)")
+  })
+  
 }
+
